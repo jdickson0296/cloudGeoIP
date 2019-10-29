@@ -33,7 +33,7 @@ def geo_country(ip):
     print(response.country.name)
 
 def geo_city(ip):
-    reader = geoip2.database.Reader('/Users/jonathan/Desktop/Fall\ 19/EE209/Project/GeoLite2-City_20191029/GeoLite2-City.mmdb')
+    reader = geoip2.database.Reader('/Users/jonathan/Desktop/Fall 19/EE209/Project/GeoLite2-City_20191029/GeoLite2-City.mmdb')
     response = reader.city('{}'.format(ip))
     print(response.city.name)
 

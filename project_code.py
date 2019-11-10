@@ -8,7 +8,6 @@ def readPcap(pcap_file):
     Reads pcap file and returns list of ip's
     Args:
         pcap_file: The pcap file you want the ip's to be read from
-
     Returns: List of source ip's
     """
     # list for IP's
@@ -23,10 +22,8 @@ def readPcap(pcap_file):
             ip = eth.data
             # read the source IP in src
             src = socket.inet_ntoa(ip.src)
-
             # Print the source and destination IP
             dst = socket.inet_ntoa(ip.dst)
-
             # save the data
             src_list.append(dst)
         except:
@@ -40,7 +37,6 @@ def geo_country(ip):
         ip: desired ip
 
     Returns: country ip came from
-
     """
     # path to the GeoLite database
     reader = geoip2.database.Reader('/Users/jonathan/Desktop/Fall 19/EE209/Project/GeoLite2-Country_20191022/GeoLite2-Country.mmdb')
@@ -56,7 +52,6 @@ def geo_city(ip):
     Uses GeoLite database to find city of source ip
     Args:
         ip: desired ip
-
     Returns: city ip came from
     """
     # path to the GeoLite database
@@ -73,7 +68,6 @@ def ip_to_csv(pcapFile):
     Writes source ip city and country to csv file
     Args:
         pcapFile: pcap file to read from
-
     Returns: csv file of ip's and their locations
     """
     # gets the list of source ip's from the pcap file
@@ -101,8 +95,4 @@ def ip_to_csv(pcapFile):
     df = pd.DataFrame({'IP' : scr_ip, 'City' : city_list, 'Country' : country_list})
     df.to_csv('IP_GeoLocation.csv', encoding='utf-8', index=False)
 
-
 ip_to_csv('smallFlows.pcap')
-
-
-

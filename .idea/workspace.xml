@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="cc3316e9-da31-4c47-a64c-27ece2948998" name="Default" comment="">
+    <list default="true" id="cc3316e9-da31-4c47-a64c-27ece2948998" name="Default" comment="edited spacing">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/project_code.py" beforeDir="false" afterPath="$PROJECT_DIR$/project_code.py" afterDir="false" />
     </list>
@@ -20,12 +20,6 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="63" />
-    <option name="y" value="23" />
-    <option name="width" value="1347" />
-    <option name="height" value="844" />
   </component>
   <component name="ProjectId" id="1TRiJCK9eGFAyhTvzcvLx2d9YoK" />
   <component name="ProjectInspectionProfilesVisibleTreeState">
@@ -99,6 +93,14 @@
       <option name="presentableId" value="Default" />
       <updated>1572058163079</updated>
     </task>
+    <task id="LOCAL-00001" summary="edited spacing">
+      <created>1573429521272</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1573429521272</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -106,10 +108,16 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="edited spacing" />
+    <option name="LAST_COMMIT_MESSAGE" value="edited spacing" />
   </component>
 </project>

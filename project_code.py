@@ -49,22 +49,6 @@ def geo_country(ip):
     except:
         return 'None'
 
-def geo_city(ip):
-    """
-    Uses GeoLite database to find city of source ip
-    Args:
-        ip: desired ip
-    Returns: city ip came from
-    """
-    # path to the GeoLite database
-    reader = geoip2.database.Reader('GeoLite2-City.mmdb')
-    try:
-        # Returns the city from the ip
-        response = reader.city('{}'.format(ip))
-        return response.city.name
-    except:
-        return "None"
-
 def ip_to_csv(pcapFile):
     """
     Writes source ip city and country to csv file
@@ -127,5 +111,3 @@ def pcap_to_csv(event, context):
                 ReturnValues="UPDATED_NEW"
             )
             print(response)
-
-ip_to_csv('smallFlows.pcap')

@@ -82,19 +82,16 @@ def ip_to_csv(pcapFile):
     country_list = []
     # iterates through each ip
     for x in scr_list:
-        # calls city function
-        city = geo_city(x)
         # calls country function
         country = geo_country(x)
         # filters for ip's that have at least a city or country location
-        if city != "None" and country != "None":
+        if country != "None":
             scr_ip.append(str(x))
-            city_list.append(str(city))
             country_list.append(str(country))
         else:
             pass
     # writes the data to a csv file
-    df = pd.DataFrame({'IP' : scr_ip, 'City' : city_list, 'Country' : country_list})
+    df = pd.DataFrame({'IP' : scr_ip, 'Country' : country_list})
     df.to_csv('IP_GeoLocation.csv', encoding='utf-8', index=False)
 
 
@@ -120,21 +117,15 @@ def pcap_to_csv(event, context):
         first_line = infile.readline()
         for row in infile:
             ddb_IP = row.strip().split(',')[0]
-            ddb_City = row.strip().split(',')[1]
-            ddb_Country = row.strip().split(',')[2]
+            ddb_Country = row.strip().split(',')[1]
             response = dynamodb.update_item(
                 TableName='209-logs',
                 Key={
                     'source-ip': {'S': ddb_IP},
                     'country': {'S': ddb_Country},
                 },
-                UpdateExpression='ADD city :city',
-                ExpressionAttributeValues={
-                    ':city': {'S': ddb_City}
-                },
                 ReturnValues="UPDATED_NEW"
             )
             print(response)
 
-
-# ip_to_csv('smallFlows.pcap')
+ip_to_csv('smallFlows.pcap')

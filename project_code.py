@@ -1,7 +1,6 @@
 import geoip2.database
 import dpkt
 import socket
-import pandas as pd
 import boto3
 import json
 
@@ -49,7 +48,7 @@ def geo_country(ip):
     except:
         return 'None'
 
-def ip_to_csv(pcapFile):
+def ip_to_array(pcapFile):
     """
     Writes source ip city and country to csv file
     Args:
@@ -60,26 +59,22 @@ def ip_to_csv(pcapFile):
     scr_list = readPcap(pcapFile)
     # list for source ip's
     scr_ip = []
-    # list for city's for ip's
-    city_list = []
     # list for country for ip's
-    country_list = []
+    ip_country_tuple = []
     # iterates through each ip
     for x in scr_list:
         # calls country function
         country = geo_country(x)
         # filters for ip's that have at least a city or country location
         if country != "None":
-            scr_ip.append(str(x))
-            country_list.append(str(country))
+            # scr_ip.append(str(x))
+            # country_list.append(str(country))
+            ip_country_tuple.append([str(x), str(country)])
         else:
             pass
-    # writes the data to a csv file
-    df = pd.DataFrame({'IP' : scr_ip, 'Country' : country_list})
-    df.to_csv('IP_GeoLocation.csv', encoding='utf-8', index=False)
+    return ip_country_tuple
 
-
-def pcap_to_csv(event, context):
+def pcap_to_s3(event, context=None):
     # **generate variables for S3 and DynamoDB clients**
     s3 = boto3.client('s3')
     dynamodb = boto3.client('dynamodb')
@@ -88,26 +83,21 @@ def pcap_to_csv(event, context):
     key = event['Records'][0]['s3']['object']['key']
     # **Dont process if the files does not have a .pcap extn**
     if '.pcap' not in key:
-        return 'Please upload .csv files only.'
+        return 'Please upload .pcap files only.'
     # **download the .pcap file to /tmp folder**
     s3.download_file(bucket, key, '/tmp/' + key)
     pcapName = 'processed_' + key[0:-4] + '.pcap'
     # Open the .pcap file to process it, and upload the processed .csv file
-    ip_to_csv(pcapName)
-    csvName = 'IP_GeoLocation.csv'
-    s3.upload_file('/tmp/' + csvName, bucket, csvName)
-    # Use the DynamoDB atomic counters to add/update data in the DynamoDB
-    with open('/tmp/' + key, 'r') as infile:
-        first_line = infile.readline()
-        for row in infile:
-            ddb_IP = row.strip().split(',')[0]
-            ddb_Country = row.strip().split(',')[1]
-            response = dynamodb.update_item(
-                TableName='209-logs',
-                Key={
-                    'source-ip': {'S': ddb_IP},
-                    'country': {'S': ddb_Country},
-                },
-                ReturnValues="UPDATED_NEW"
-            )
-            print(response)
+    data_tuple = ip_to_array(pcapName)
+    for x in data_tuple:
+        ddb_IP = x[0]
+        ddb_Country = x[1]
+        response = dynamodb.update_item(
+            TableName='209-logs',
+            Key={
+                'source-ip': {'S': ddb_IP},
+                'country': {'S': ddb_Country},
+            },
+            ReturnValues="UPDATED_NEW"
+        )
+        print(response)

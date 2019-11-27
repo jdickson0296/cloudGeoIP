@@ -48,6 +48,22 @@ def geo_country(ip):
     except:
         return 'None'
 
+def geo_city(ip):
+    """
+    Uses GeoLite database to find city of source ip
+    Args:
+        ip: desired ip
+    Returns: city ip came from
+    """
+    # path to the GeoLite database
+    reader = geoip2.database.Reader('GeoLite2-City.mmdb')
+    try:
+        # Returns the city from the ip
+        response = reader.city('{}'.format(ip))
+        return response.city.name
+    except:
+        return "None"
+
 def ip_to_array(pcapFile):
     """
     Writes source ip city and country to csv file
@@ -63,13 +79,13 @@ def ip_to_array(pcapFile):
     ip_country_tuple = []
     # iterates through each ip
     for x in scr_list:
+        # calls city function
+        city = geo_city(x)
         # calls country function
         country = geo_country(x)
         # filters for ip's that have at least a city or country location
-        if country != "None":
-            # scr_ip.append(str(x))
-            # country_list.append(str(country))
-            ip_country_tuple.append([str(x), str(country)])
+        if city != "None" and country != "None":
+            ip_country_tuple.append([str(x), str(city), str(country)])
         else:
             pass
     return ip_country_tuple
@@ -90,12 +106,17 @@ def pcap_to_s3(event, context=None):
     data_tuple = ip_to_array('/tmp/'+key)
     for x in data_tuple:
         ddb_IP = x[0]
-        ddb_Country = x[1]
+        ddb_City = x[1]
+        ddb_Country = x[2]
         response = dynamodb.update_item(
             TableName='209-logs',
             Key={
                 'source-ip': {'S': ddb_IP},
                 'country': {'S': ddb_Country},
+            },
+            UpdateExpression='ADD City :city',
+            ExpressionAttributeValues={
+                ':city': {'S': ddb_City}
             },
             ReturnValues="UPDATED_NEW"
         )

@@ -2,6 +2,8 @@ import geoip2.database
 import dpkt
 import socket
 import pandas as pd
+import argparse
+import os
 
 def readPcap(pcap_file):
     """
@@ -95,4 +97,21 @@ def ip_to_csv(pcapFile):
     df = pd.DataFrame({'IP' : scr_ip, 'City' : city_list, 'Country' : country_list})
     df.to_csv('IP_GeoLocation.csv', encoding='utf-8', index=False)
 
-ip_to_csv('smallFlows.pcap')
+def is_valid_file(parser, arg):
+    if not os.path.exists(arg):
+        parser.error("The file %s does not exist!" % arg)
+    else:
+        return open(arg, 'r')  # return an open file handle
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-i", dest="filename", required=True,
+                        help="input pcap file", metavar="FILE",
+                        type=lambda x: is_valid_file(parser, x))
+    parser.parse_args()
+    args = parser.parse_args()
+    ip_to_csv(args.filename)
+
+
+if __name__ == '__main__':
+    main()

@@ -39,7 +39,7 @@ def geo_country(ip):
     Returns: country ip came from
     """
     # path to the GeoLite database
-    reader = geoip2.database.Reader('/Users/jonathan/Desktop/Fall 19/EE209/Project/GeoLite2-Country_20191022/GeoLite2-Country.mmdb')
+    reader = geoip2.database.Reader('GeoLite2-Country.mmdb')
     try:
         # Returns the country from the ip
         response = reader.country('{}'.format(ip))
@@ -55,7 +55,7 @@ def geo_city(ip):
     Returns: city ip came from
     """
     # path to the GeoLite database
-    reader = geoip2.database.Reader('/Users/jonathan/Desktop/Fall 19/EE209/Project/GeoLite2-City_20191029/GeoLite2-City.mmdb')
+    reader = geoip2.database.Reader('GeoLite2-City.mmdb')
     try:
         # Returns the city from the ip
         response = reader.city('{}'.format(ip))

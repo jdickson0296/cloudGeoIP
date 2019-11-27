@@ -105,13 +105,10 @@ def is_valid_file(parser, arg):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-i", dest="filename", required=True,
-                        help="input pcap file", metavar="FILE",
-                        type=lambda x: is_valid_file(parser, x))
+    parser.add_argument("-f", dest="filename",help="input pcap file")
     parser.parse_args()
     args = parser.parse_args()
     ip_to_csv(args.filename)
-
 
 if __name__ == '__main__':
     main()

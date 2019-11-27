@@ -86,9 +86,8 @@ def pcap_to_s3(event, context=None):
         return 'Please upload .pcap files only.'
     # **download the .pcap file to /tmp folder**
     s3.download_file(bucket, key, '/tmp/' + key)
-    pcapName = 'processed_' + key[0:-4] + '.pcap'
     # Open the .pcap file to process it, and upload the processed .csv file
-    data_tuple = ip_to_array(pcapName)
+    data_tuple = ip_to_array('/tmp/'+key)
     for x in data_tuple:
         ddb_IP = x[0]
         ddb_Country = x[1]
